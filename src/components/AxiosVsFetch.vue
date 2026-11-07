@@ -4,7 +4,7 @@
  * Dieselbe Aufgabe (einen Nutzer per ID laden) mit drei Implementierungen.
  * Der angezeigte Code ist der echte Quelltext der Services (Import per ?raw).
  */
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { getUser } from '@/services/userService'
 import { getUserFetch, getUserFetchNaive, HttpError } from '@/services/fetchUserService'
 import { describeError } from '@/services/errors'
@@ -43,7 +43,18 @@ async function attempt(fn: (id: number) => Promise<unknown>, id: number): Promis
   }
 }
 
+/** Nur positive ganze Zahlen – ein leeres Feld würde sonst /users/ (die Liste) abfragen */
+const validId = computed(() => Number.isInteger(userId.value) && userId.value > 0)
+
+/**
+ * Die „Falle“: fetch ohne Prüfung meldet Erfolg, obwohl die korrekte
+ * fetch-Variante für dieselbe ID einen Fehler erkannt hat.
+ * Abgeleitet aus den Ergebnissen, nicht aus dem aktuellen Eingabefeld.
+ */
+const isTrap = computed(() => !!outcomes.value && outcomes.value.naive.ok && !outcomes.value.fetch.ok)
+
 async function runAll() {
+  if (!validId.value) return
   running.value = true
   const id = userId.value
   const [axiosResult, fetchResult, naiveResult] = await Promise.all([
@@ -76,7 +87,7 @@ const differences = [
     <form class="controls" @submit.prevent="runAll">
       <label for="uid">Nutzer-ID</label>
       <input id="uid" v-model.number="userId" type="number" min="1" />
-      <button class="btn" type="submit" :disabled="running">{{ running ? 'Läuft …' : 'Beide ausführen' }}</button>
+      <button class="btn" type="submit" :disabled="running || !validId">{{ running ? 'Läuft …' : 'Beide ausführen' }}</button>
       <button class="btn btn--ghost" type="button" @click="userId = userId === 1 ? 999 : 1">
         ID {{ userId === 1 ? '999' : '1' }} nehmen
       </button>
@@ -105,7 +116,7 @@ const differences = [
           <summary>fetch ohne <code>res.ok</code>-Prüfung</summary>
           <CodeBlock :code="naiveCode" />
         </details>
-        <div v-if="outcomes" :class="['outcome', 'outcome--naive', { 'outcome--trap': outcomes.naive.ok && userId !== 1 }]">
+        <div v-if="outcomes" :class="['outcome', 'outcome--naive', { 'outcome--trap': isTrap }]">
           <strong>Ohne Prüfung: {{ outcomes.naive.verdict }}</strong>
           <span>{{ outcomes.naive.detail }}</span>
         </div>

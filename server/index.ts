@@ -21,7 +21,7 @@ import express, { type NextFunction, type Request, type Response } from 'express
 import { DEMO_TOKEN, users, type User } from './data.ts'
 
 // Eigener Variablenname (nicht PORT), damit kein Tool versehentlich den Vite-Port setzt.
-// Muss zu API_PORT in vite.config.ts passen.
+// vite.config.ts liest dieselbe Variable für den Proxy.
 const PORT = Number(process.env.API_PORT ?? 3001)
 // Verzögerung der Suche, damit man abgebrochene Requests im Log sieht
 const SEARCH_DELAY_MS = 700
@@ -90,6 +90,12 @@ app.post('/api/users', (req, res) => {
     sendError(res, 422, 'Validierung fehlgeschlagen: "name" muss mindestens 2 Zeichen haben')
     return
   }
+  const optionalFields = ['username', 'email', 'knownFor'] as const
+  const invalid = optionalFields.find((f) => body[f] !== undefined && typeof body[f] !== 'string')
+  if (invalid) {
+    sendError(res, 422, `Validierung fehlgeschlagen: "${invalid}" muss ein Text sein`)
+    return
+  }
   const user: User = {
     id: Math.max(...users.map((u) => u.id)) + 1,
     name: body.name.trim(),
@@ -111,7 +117,9 @@ app.get('/api/demo/error/:status', (req, res) => {
 })
 
 app.get('/api/demo/slow', async (req, res) => {
-  const ms = Math.min(Number(req.query.ms ?? 5000) || 5000, 15000)
+  // Ungültige Werte → 5000; 0 bleibt 0 (kein „|| 5000“, sonst wäre 0 falsy)
+  const requested = Number(req.query.ms ?? 5000)
+  const ms = Number.isFinite(requested) ? Math.min(Math.max(requested, 0), 15000) : 5000
   await sleep(ms)
   if (req.socket.destroyed) return
   res.json({ message: `Antwort nach ${ms} ms` })

@@ -75,7 +75,8 @@ Reihenfolge der Kürzungen: zuerst Netzwerkfehler in Tab 2, dann Abmelden in Tab
 | Problem | Lösung |
 | --- | --- |
 | `npm run dev:all` startet nicht, Port belegt | `lsof -i :5173 -i :3001` zeigt den Prozess, mit `kill <PID>` beenden und neu starten |
-| Backend abgestürzt (alles „Netzwerkfehler“) | Das ist ein Netzwerkfehler-Demo-Moment: kurz zeigen, dann im Terminal `npm run dev:server` neu starten |
+| Backend abgestürzt (alles „502 – Serverfehler“) | Der Vite-Proxy ist noch erreichbar und antwortet mit 502, deshalb ist es *kein* Netzwerkfehler. Gut für eine Diskussionsfrage. Im Terminal `npm run dev:server` neu starten (oder `dev:all` komplett neu) |
+| Port 3001 belegt | `API_PORT=3005 npm run dev:all`: Backend und Proxy nutzen beide diese Variable |
 | Seite hängt oder sieht komisch aus | Cmd+R. Der Zustand ist egal, das Protokoll startet leer |
 | Nach 401 bleibt alles rot | Oben rechts auf „Anmelden“ klicken |
 | Browser oder Beamer streikt komplett | Nur `npm test` im Terminal zeigen (läuft ohne Backend) und den Code in `api.ts` im Editor erklären |

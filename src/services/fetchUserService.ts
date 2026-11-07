@@ -25,8 +25,9 @@ export class HttpError extends Error {
 /** Naive Variante (wie Folie 2): vergisst die Statusprüfung */
 // #region fetch-naive
 export async function getUserFetchNaive(id: number): Promise<User> {
+  const { token } = useAuthStore()
   const res = await fetch(`${API_BASE}/users/${id}`, {
-    headers: { Authorization: `Bearer ${useAuthStore().token}` },
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
   })
   return res.json() // läuft auch bei 404!
 }

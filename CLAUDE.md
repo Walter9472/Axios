@@ -38,5 +38,5 @@ npm run build     # vue-tsc + vite build
 - Der Backend-Port kommt aus `API_PORT`, nicht aus `PORT` (manche Tools setzen `PORT=5173`). Er muss zu `API_PORT` in `vite.config.ts` passen.
 - Vitest 5 hat standardmäßig `clearMocks: true`. Mock-Aufrufe, die beim Modul-Import entstehen, müssen sofort gesichert werden (siehe `tests/api.interceptors.spec.ts`).
 - In `api.ts` ist die Reihenfolge der Interceptor-Registrierung Absicht: Request-Interceptors laufen in umgekehrter Reihenfolge, der Logger soll den Token sehen.
-- Der Netzwerkfehler-Fall schickt einen Request an `http://127.0.0.1:9`, dort lauscht nichts.
+- Der Netzwerkfehler-Fall schickt einen Request an `http://localhost:3002`, dort läuft nichts. Port 9 o. Ä. nicht verwenden, weil Chrome ihn mit `ERR_UNSAFE_PORT` blockiert.
 - Axios ist exakt auf `1.21.0` gepinnt (Malware-Vorfall 1.14.1/0.30.4, GHSA-fw8c-xr5c-95f9). Nicht auf `^` umstellen.

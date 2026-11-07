@@ -55,7 +55,7 @@ export const scenarios: Scenario[] = [
     id: 'network',
     label: 'Netzwerkfehler',
     expectation: 'Server nicht erreichbar',
-    // Request an einen Port, auf dem niemand lauscht → keine Antwort
-    run: () => api.get('/health', { baseURL: 'http://127.0.0.1:9' }),
+    // Request an einen Port, auf dem kein Server läuft → Verbindung abgelehnt, keine Antwort
+    run: () => api.get('/health', { baseURL: 'http://localhost:3002/api' }),
   },
 ]

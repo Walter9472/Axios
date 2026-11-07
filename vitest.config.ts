@@ -11,8 +11,8 @@ export default mergeConfig(
       include: ['tests/**/*.spec.ts'],
       exclude: [...configDefaults.exclude],
       root: fileURLToPath(new URL('./', import.meta.url)),
-      // Mocks nach jedem Test automatisch zurücksetzen
-      restoreMocks: true,
+      // Jeden Testnamen ausgeben – im Vortrag sieht man so, WAS geprüft wird
+      reporters: ['verbose'],
     },
   }),
 )

@@ -13,8 +13,8 @@ import { installRequestLogger } from './requestLog'
 
 // #region create
 export const api = axios.create({
-  baseURL: '/api', // Vite-Proxy leitet /api an das Backend weiter
-  timeout: 3000, // nach 3 s ohne Antwort: Fehler mit Code ECONNABORTED
+  baseURL: '/api', // Vite-Proxy → Backend
+  timeout: 3000, // danach Fehler ECONNABORTED
   headers: { Accept: 'application/json' },
 })
 // #endregion

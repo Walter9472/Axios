@@ -28,7 +28,7 @@ export async function getUserFetchNaive(id: number): Promise<User> {
   const res = await fetch(`${API_BASE}/users/${id}`, {
     headers: { Authorization: `Bearer ${useAuthStore().token}` },
   })
-  return res.json() // läuft auch bei 404 – liefert dann den Fehler-Body als „User“
+  return res.json() // läuft auch bei 404!
 }
 // #endregion
 
@@ -41,13 +41,13 @@ export async function getUserFetch(id: number): Promise<User> {
       Accept: 'application/json',
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
-    signal: AbortSignal.timeout(3000), // Timeout gibt es nur über ein Signal
+    signal: AbortSignal.timeout(3000), // Timeout per Signal
   })
   if (!res.ok) {
-    // 4xx/5xx selbst erkennen und in einen Fehler umwandeln
+    // 4xx/5xx selbst in einen Fehler umwandeln
     const body = (await res.json().catch(() => null)) as ApiErrorBody | null
     throw new HttpError(res.status, body?.message ?? res.statusText)
   }
-  return (await res.json()) as User // JSON selbst parsen
+  return (await res.json()) as User // selbst parsen
 }
 // #endregion

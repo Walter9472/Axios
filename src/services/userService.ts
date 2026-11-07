@@ -16,7 +16,7 @@ export async function getUsers(): Promise<User[]> {
 // #region get-user
 export async function getUser(id: number): Promise<User> {
   const { data } = await api.get<User>(`/users/${id}`)
-  return data // 404 → Promise wird abgelehnt, landet im catch
+  return data // bei 404: Promise abgelehnt
 }
 // #endregion
 

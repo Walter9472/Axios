@@ -15,8 +15,11 @@ export function extractRegion(source: string, name: string): string {
   const start = lines.findIndex((l) => l.trim() === `// #region ${name}`)
   if (start === -1) return `// Region "${name}" nicht gefunden`
   const end = lines.findIndex((l, i) => i > start && l.trim().startsWith('// #endregion'))
-  return lines
-    .slice(start + 1, end === -1 ? undefined : end)
+  const region = lines.slice(start + 1, end === -1 ? undefined : end)
+  // Gemeinsame Einrückung entfernen, damit eingerückte Funktionen links anfangen
+  const indent = Math.min(...region.filter((l) => l.trim()).map((l) => l.length - l.trimStart().length))
+  return region
+    .map((l) => l.slice(Number.isFinite(indent) ? indent : 0))
     .join('\n')
     .trimEnd()
 }

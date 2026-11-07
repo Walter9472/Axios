@@ -16,10 +16,11 @@ export function useUserSearch() {
   const loading = ref(false)
   const error = ref<ErrorInfo | null>(null)
 
+  // #region search
   let controller: AbortController | null = null
 
   async function search(query: string): Promise<void> {
-    controller?.abort() // laufenden Request abbrechen → dort CanceledError
+    controller?.abort() // alten Request abbrechen
     error.value = null
 
     if (!query.trim()) {
@@ -36,13 +37,14 @@ export function useUserSearch() {
       results.value = await searchUsers(query, current.signal)
     } catch (e) {
       const info = describeError(e)
-      if (info.kind === 'canceled') return // gewollt, kein Fehler anzeigen
+      if (info.kind === 'canceled') return // gewollt
       error.value = info
     } finally {
-      // Nur der neueste Request darf den Ladezustand beenden
+      // nur der neueste Request beendet das Laden
       if (controller === current) loading.value = false
     }
   }
+  // #endregion
 
   // Entspricht onUnmounted() in einer Komponente: offenen Request abbrechen
   if (getCurrentScope()) {

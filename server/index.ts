@@ -20,7 +20,9 @@
 import express, { type NextFunction, type Request, type Response } from 'express'
 import { DEMO_TOKEN, users, type User } from './data.ts'
 
-const PORT = Number(process.env.PORT ?? 3001)
+// Eigener Variablenname (nicht PORT), damit kein Tool versehentlich den Vite-Port setzt.
+// Muss zu API_PORT in vite.config.ts passen.
+const PORT = Number(process.env.API_PORT ?? 3001)
 // Verzögerung der Suche, damit man abgebrochene Requests im Log sieht
 const SEARCH_DELAY_MS = 700
 

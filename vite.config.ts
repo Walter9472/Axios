@@ -14,6 +14,7 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    strictPort: true, // lieber klare Fehlermeldung als stillschweigend ein anderer Port
     // Alle Requests an /api/... leitet Vite an das Backend weiter.
     // Vorteil: gleiche Origin im Browser → kein CORS-Thema in der Demo.
     proxy: {

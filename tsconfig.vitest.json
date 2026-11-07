@@ -1,0 +1,11 @@
+// Tests (Vitest + jsdom). Der App-Code wird über die Imports mitgeprüft.
+{
+  "extends": "./tsconfig.app.json",
+  "include": ["tests/**/*", "env.d.ts"],
+  "exclude": [],
+  "compilerOptions": {
+    "lib": [],
+    "types": ["node", "jsdom"],
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.vitest.tsbuildinfo"
+  }
+}

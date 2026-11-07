@@ -1,0 +1,13 @@
+// Frontend-Code (Browser): Vue-Komponenten, Services, Composables
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "include": ["env.d.ts", "src/**/*", "src/**/*.vue"],
+  "compilerOptions": {
+    "noUncheckedIndexedAccess": true,
+    // Alias "@/..." zeigt auf "src/..." (so auch auf den Folien: '@/services/api')
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo"
+  }
+}
